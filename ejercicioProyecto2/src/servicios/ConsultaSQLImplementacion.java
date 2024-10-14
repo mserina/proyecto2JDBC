@@ -9,7 +9,7 @@ import dtos.UsuarioDto;
 public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 
 	public void añadirUsuarioBD(Connection conexionGenerada, UsuarioDto nuevoUsuario ) {
-		String sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, idClub) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, \"idClub\") VALUES (?, ?, ?, ?, ?, ?)";
 		
 		 try (PreparedStatement preparedStatement = conexionGenerada.prepareStatement(sql)) {
 			 
@@ -30,7 +30,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		        }
 		        
 		    }catch(SQLException e) {
-			System.err.println("[ERROR-ConsultasPostgresqlImplementacion-seleccionaTodosLibros] Error generando o ejecutando la declaracionSQL: " + e);
+			System.err.println("[ERROR-ConsultasPostgresqlImplementacion-seleccionaTodosLibros] Error generando o ejecutando la declaracionSQL: " + e.getLocalizedMessage());
 		}
 	}
 }

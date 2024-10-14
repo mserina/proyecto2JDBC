@@ -30,11 +30,12 @@ public class OperacionImplementacion implements OperacionInterfaz{
 		}
 		
 		inicio.listaUsuario.add(usuario);
+		mostrarUsuario();
 		
 		//Aqui es donde se añade el usuario a la base de da
 		inicio.consultaSQL.añadirUsuarioBD(inicio.conexion, usuario);
 		
-		mostrarUsuario();
+		
 	}
 	
 	private void mostrarUsuario() throws Exception {
