@@ -7,6 +7,7 @@ import util.utiles;
 
 public class OperacionImplementacion implements OperacionInterfaz{
 
+	
 	utiles util = new utiles();
 	//Usuarios
 	public void altaUsuario() throws Exception{
@@ -20,8 +21,18 @@ public class OperacionImplementacion implements OperacionInterfaz{
 		System.out.println("Inserte Correo");
 		usuario.setCorreo(inicio.sc.next());
 		usuario.setIdUsuario(util.idGeneratorUsuarios());
+		System.out.println("¿Estas en un club? s/n");
+		String respuesta = inicio.sc.next();
+		
+		if(respuesta == "s") {
+			System.out.println("Inserte id del club al que pertenece");
+			usuario.setIdClubCF(inicio.sc.nextLong());
+		}
 		
 		inicio.listaUsuario.add(usuario);
+		
+		//Aqui es donde se añade el usuario a la base de da
+		inicio.consultaSQL.añadirUsuarioBD(inicio.conexion, usuario);
 		
 		mostrarUsuario();
 	}

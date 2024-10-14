@@ -25,9 +25,12 @@ public class ConexionPostgreSQLImplementacion implements ConexionPostgreSQLInter
 				//Si pgadmin no tiene abierta la bd, no será posible establecer conexion contra ella
 				conexion = DriverManager.getConnection(parametrosConexion[0],parametrosConexion[1],parametrosConexion[2]);
 				boolean esValida = conexion.isValid(50000);
+				//Si la conexion falla se establece un valor null, haciendo que se ative el catch y salga un texto informando sobre error de conexion
 				if(esValida == false) {
 					conexion = null;
 				}
+				
+				//Si todo es correcto imprime un texto informando que tuvo exito la conexion
 				System.out.println(esValida ? "[INFORMACIÓN-ConexionPostgresqlImplementacion-generaConexion] Conexión a PostgreSQL válida" : "[ERROR-ConexionPostgresqlImplementacion-generaConexion] Conexión a PostgreSQL no válida");
 	            
 			} catch (ClassNotFoundException cnfe) {
@@ -53,7 +56,7 @@ public class ConexionPostgreSQLImplementacion implements ConexionPostgreSQLInter
 		
 		Properties propiedadesConexion = new Properties();
 		try {
-			propiedadesConexion.load(new FileInputStream(new File("C:\\Users\\Alumno\\dws-workspace\\edu.jdbc.crud\\src\\edu\\jdbc\\crud\\util\\conexion_postgresql.properties")));
+			propiedadesConexion.load(new FileInputStream(new File("C:\\Users\\Alumno\\git\\proyect2BD\\ejercicioProyecto2\\src\\parametros.txt")));
 			user = propiedadesConexion.getProperty("user");
 			pass = propiedadesConexion.getProperty("pass");
 			port = propiedadesConexion.getProperty("port");
