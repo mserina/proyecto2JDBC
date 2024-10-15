@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import dtos.ClubDto;
 import dtos.UsuarioDto;
 
 public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
@@ -30,7 +31,33 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		        }
 		        
 		    }catch(SQLException e) {
-			System.err.println("[ERROR-ConsultasPostgresqlImplementacion-seleccionaTodosLibros] Error generando o ejecutando la declaracionSQL: " + e.getLocalizedMessage());
+			System.err.println("[ERROR] Error generando o ejecutando la declaracionSQL: " + e.getLocalizedMessage());
+		}
+	}
+	
+	public void añadirClubBD(Connection conexionGenerada, ClubDto nuevoClub ) {
+		String sql = "INSERT INTO \"esquemaclub\".\"club\" (idclub, nombreclub, sedeprincipal, fechacreacion, entradapublica, codigoprivado) VALUES (?, ?, ?, ?, ?, ?)";
+		
+		 try (PreparedStatement preparedStatement = conexionGenerada.prepareStatement(sql)) {
+			 
+		        // Asignamos los valores del DTO a los parámetros de la consulta SQL
+		        preparedStatement.setLong(1, nuevoClub.getIdClubC()); 
+		        preparedStatement.setString(2, nuevoClub.getNombreClubC()); 
+		        preparedStatement.setString(3, nuevoClub.getSedePrincipalC()); 
+		        preparedStatement.setDate(4, java.sql.Date.valueOf(nuevoClub.getFechaCreacionC())); 
+		        preparedStatement.setBoolean(5, nuevoClub.isEntradaPublicaC()); 
+		        preparedStatement.setString(6, nuevoClub.getCodigoPrivado()); 
+		        
+		        // Ejecutamos el INSERT
+		        int filasInsertadas = preparedStatement.executeUpdate();
+		        
+		        // Confirmamos si la inserción fue exitosa
+		        if (filasInsertadas > 0) {
+		            System.out.println("¡Inserción exitosa!");
+		        }
+		        
+		    }catch(SQLException e) {
+			System.err.println("[ERROR] Error generando o ejecutando la declaracionSQL: " + e.getLocalizedMessage());
 		}
 	}
 }

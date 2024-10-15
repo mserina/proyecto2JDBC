@@ -24,15 +24,23 @@ public class OperacionImplementacion implements OperacionInterfaz{
 		System.out.println("¿Estas en un club? s/n");
 		String respuesta = inicio.sc.next();
 		
-		if(respuesta == "s") {
-			System.out.println("Inserte id del club al que pertenece");
+		if(respuesta.equals("s")) {
+			System.out.println("Inserte nombre del club al que pertenece");
+			String nombreClub = inicio.sc.next();
+			for(ClubDto club : inicio.listaClub) {
+				
+				if(club.getNombreClubC().equals(nombreClub)) {
+					
+					usuario.setIdClubCF(club.getIdClubC());
+				}
+			}
 			usuario.setIdClubCF(inicio.sc.nextLong());
 		}
 		
 		inicio.listaUsuario.add(usuario);
 		mostrarUsuario();
 		
-		//Aqui es donde se añade el usuario a la base de da
+		//Aqui es donde se añade el usuario a la base de datos
 		inicio.consultaSQL.añadirUsuarioBD(inicio.conexion, usuario);
 		
 		
@@ -75,6 +83,8 @@ public class OperacionImplementacion implements OperacionInterfaz{
 		inicio.listaClub.add(club);
 		
 		mostrarClub();
+		
+		inicio.consultaSQL.añadirClubBD(inicio.conexion, club);
 		
 	}
 	
