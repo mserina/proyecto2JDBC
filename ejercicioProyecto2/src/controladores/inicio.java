@@ -27,12 +27,13 @@ public class inicio {
 		boolean cerrarMenu = false;
 		byte opcionUsuario = 0;
 		
-		
 		MenuInterfaz mi = new MenuImplementacion();
-		
+		ConsultaSQLInterfaz consul = new ConsultaSQLImplementacion();
+	
 		
 		do {
 			try {
+				
 				opcionUsuario = mi.mostrarMenu();
 				
 				switch(opcionUsuario) {
@@ -45,6 +46,9 @@ public class inicio {
 					break;
 				case 2:
 					mi.menuClub();
+					break;
+				case 3: 
+					
 					break;
 				}
 				

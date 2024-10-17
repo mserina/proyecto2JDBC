@@ -59,6 +59,16 @@ public class ClubDto {
 		this.codigoPrivado = codigoPrivado;
 	}
 	
+	public ClubDto(long idClubC, String nombreClubC, String sedePrincipalC, boolean entradaPublicaC, String codigoPrivado, LocalDate fechaCreacionC ) {
+		super();
+		this.idClubC = idClubC;
+		this.nombreClubC = nombreClubC;
+		this.sedePrincipalC = sedePrincipalC;
+		this.entradaPublicaC = entradaPublicaC;
+		this.codigoPrivado = codigoPrivado;
+		this.fechaCreacionC = fechaCreacionC;
+	}
+	
 	public ClubDto() {
 		super();
 	}

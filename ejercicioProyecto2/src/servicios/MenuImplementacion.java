@@ -100,7 +100,8 @@ public class MenuImplementacion implements MenuInterfaz{
 	public void menuClub() {
 		boolean cerrarMenu = false;
 		byte opcionUsuario = 0;
-	
+		//BORRAR
+		ConsultaSQLInterfaz consul = new ConsultaSQLImplementacion();
 		
 		do {
 			try {
@@ -120,8 +121,12 @@ public class MenuImplementacion implements MenuInterfaz{
 					cerrarMenu = true;
 					break;
 				case 3:
-					
+					consul.modificarClubBD();
 					cerrarMenu = true;
+					break;
+					//BORRAR
+				case 4: 
+					consul.listaBaseDatoClubs();
 					break;
 				}
 				
