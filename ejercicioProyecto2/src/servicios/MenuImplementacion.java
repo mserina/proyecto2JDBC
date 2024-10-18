@@ -117,7 +117,7 @@ public class MenuImplementacion implements MenuInterfaz{
 					cerrarMenu = true;
 					break;
 				case 2:
-					
+					consul.eliminarClubBD();
 					cerrarMenu = true;
 					break;
 				case 3:
