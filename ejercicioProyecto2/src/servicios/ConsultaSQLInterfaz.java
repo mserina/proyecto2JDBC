@@ -9,7 +9,6 @@ import dtos.UsuarioDto;
 
 public interface ConsultaSQLInterfaz {
 
-	public void añadirUsuarioBD(Connection conexionGenerada, UsuarioDto nuevoUsuario );
 	public ResultSet listaBaseDatoClubs() throws SQLException;
 	
 	
@@ -18,8 +17,17 @@ public interface ConsultaSQLInterfaz {
 	 */
 	public void modificarClubBD() throws SQLException;
 	
-	public void añadirClubBD(Connection conexionGenerada, ClubDto nuevoClub ) throws SQLException;
+	public void añadirClubBD(ClubDto nuevoClub ) throws SQLException;
 	
 	public void eliminarClubBD() throws SQLException;
+	/*
+	 * ---------------------USUARIO------------------------------
+	 */
+	public void añadirUsuarioBD() throws SQLException;
+	
+	public void modificarUsuarioBD() throws SQLException;
+	
+	public void eliminarUsuarioBD() throws SQLException;
+	
 
 }

@@ -64,7 +64,8 @@ public class MenuImplementacion implements MenuInterfaz{
 	public void menuUsuario() {
 		boolean cerrarMenu = false;
 		byte opcionUsuario = 0;
-	
+		ConsultaSQLInterfaz consulta = new ConsultaSQLImplementacion();
+		
 		
 		do {
 			try {
@@ -76,15 +77,15 @@ public class MenuImplementacion implements MenuInterfaz{
 					cerrarMenu = true;
 					break;
 				case 1:
-					op.altaUsuario();
+					consulta.añadirUsuarioBD();
 					cerrarMenu = true;
 					break;
 				case 2:
-					
+					consulta.eliminarUsuarioBD();
 					cerrarMenu = true;
 					break;
 				case 3:
-					
+					consulta.modificarClubBD();
 					cerrarMenu = true;
 					break;
 				}
@@ -123,10 +124,6 @@ public class MenuImplementacion implements MenuInterfaz{
 				case 3:
 					consul.modificarClubBD();
 					cerrarMenu = true;
-					break;
-					//BORRAR
-				case 4: 
-					consul.listaBaseDatoClubs();
 					break;
 				}
 				
