@@ -4,7 +4,6 @@ import controladores.inicio;
 
 public class MenuImplementacion implements MenuInterfaz{
 
-	OperacionInterfaz op = new OperacionImplementacion();
 	
 	public byte mostrarMenu(){
 		inicio i = new inicio();
@@ -114,7 +113,7 @@ public class MenuImplementacion implements MenuInterfaz{
 					cerrarMenu = true;
 					break;
 				case 1:
-					op.altaClub();
+					consul.añadirClubBD();
 					cerrarMenu = true;
 					break;
 				case 2:

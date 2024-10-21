@@ -6,7 +6,7 @@ import java.util.Date;
 public class ClubDto {
 
 	long idClubC;
-	String nombreClubC = "aaa";
+	String nombreClubC = "aaaa";
 	String sedePrincipalC = "aaa";
 	LocalDate fechaCreacionC = LocalDate.now();
 	boolean entradaPublicaC = false;

@@ -17,7 +17,7 @@ public interface ConsultaSQLInterfaz {
 	 */
 	public void modificarClubBD() throws SQLException;
 	
-	public void añadirClubBD(ClubDto nuevoClub ) throws SQLException;
+	public void añadirClubBD() throws SQLException;
 	
 	public void eliminarClubBD() throws SQLException;
 	/*

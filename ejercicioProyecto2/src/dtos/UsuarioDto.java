@@ -46,13 +46,12 @@ public class UsuarioDto {
 		this.correoC = correo;
 	}
 	
-	public UsuarioDto(long idUsuario, String nombreC, String apellidoC, int telefono, String correo, long idClubCF) {
+	public UsuarioDto(long idUsuario, String nombreC, String apellidoC, int telefono, String correo) {
 		this.idUsuario = idUsuario;
 		this.nombreC = nombreC;
 		this.apellidoC = apellidoC;
 		this.telefonoC = telefono;
 		this.correoC = correo;
-		this.idClubCF = idClubCF;
 	}
 	
 	public UsuarioDto() {

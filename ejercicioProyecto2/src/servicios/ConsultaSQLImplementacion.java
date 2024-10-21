@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import controladores.inicio;
 import dtos.ClubDto;
@@ -14,11 +15,30 @@ import dtos.UsuarioDto;
 public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 
 	
-	public void añadirClubBD(ClubDto nuevoClub ) throws SQLException {
+	
+	public void añadirClubBD() throws SQLException {
+		ClubDto nuevoClub = new ClubDto();
 		ResultSet resultado = listaBaseDatoClubs();
 		boolean usuarioRepetido = false;
 		int contador = 0;
 		
+		//Pedir al usuario los datos del nuevo club
+		System.out.println("Inserte nombre del club");
+		nuevoClub.setNombreClubC(inicio.sc.next());
+		System.out.println("Inserte el nombre de la sede principal del club");
+		nuevoClub.setSedePrincipalC(inicio.sc.next());
+		nuevoClub.setFechaCreacionC(LocalDate.now());
+		System.out.println("¿Su club es privado o publico?");
+		String respuesta = inicio.sc.next();
+		if(respuesta.equals("publica")) {
+			nuevoClub.setEntradaPublicaC(true);
+		}
+		else {
+			nuevoClub.setEntradaPublicaC(false);
+		}
+		
+		
+		//Se revisa a traves del result (de la tabla de clubs) si hay algun club que ya tenga el nombre del nuevo club que queramos añadir
 		while(resultado.next()) {
 			
 			if(resultado.getString("nombreClub").equals(nuevoClub.getNombreClubC())) {
@@ -29,6 +49,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			contador ++;
 		}
 		
+		//Si el usuario no es repetido crea un preparedStatement (una query con una sintaxis preestablecida) añade los valores del Dto recien creado, y lanza la query
 		if(!usuarioRepetido) {
 			
 			String sql = "INSERT INTO \"esquemaclub\".\"club\" (idclub, nombreclub, sedeprincipal, fechacreacion, entradapublica, codigoprivado) VALUES (?, ?, ?, ?, ?, ?)";
@@ -88,10 +109,10 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		PreparedStatement sentencia = null;
 		int filasModificadas;
 		
-		System.out.println("Inserte nombre del club a modificar nombre/sede/fecha/entrada");
+		System.out.println("Inserte nombre del club a modificar");
 		nombreInsertado = inicio.sc.next();
 		
-		System.out.println("¿Que campo quiere cambiar?");
+		System.out.println("¿Que campo quiere cambiar? nombre/sede/fecha/entrada");
 		opcion = inicio.sc.next();
 				
 		switch(opcion) {
@@ -172,10 +193,42 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
           	
 	public void añadirUsuarioBD() throws SQLException {
 		UsuarioDto nuevoUsuario = new UsuarioDto();
-		ResultSet resultado = listaBaseDatoClubs();
+		ResultSet resultado = listaBaseDatoUsuario();
+		ResultSet resultadoClub = listaBaseDatoClubs();
 		boolean usuarioRepetido = false;
 		int contador = 0;
+		int contadorClub = 0;
 		
+		//Se piden los datos del usuario nuevo
+		System.out.println("Inserte Nombre");
+		nuevoUsuario.setNombreC(inicio.sc.next());
+		System.out.println("Inserte Apellidos");
+		nuevoUsuario.setApellidoC(inicio.sc.next());
+		System.out.println("Inserte Telefono");
+		nuevoUsuario.setTelefono(inicio.sc.nextInt());
+		System.out.println("Inserte Correo");
+		nuevoUsuario.setCorreo(inicio.sc.next());
+		System.out.println("¿Estas en un club? s/n");
+		String respuesta = inicio.sc.next();
+		
+		//Se pide el nombre del club al que pertenece y de ahi se saca el id del club
+		if(respuesta.equals("s")) {
+			System.out.println("Inserte nombre del club al que pertenece");
+			String nombreClub = inicio.sc.next();
+			
+			while(resultadoClub.next()) {
+				
+				contadorClub ++;
+				if(resultadoClub.getString("nombreclub").equals(nombreClub)) {
+					
+					nuevoUsuario.setIdClubCF(contadorClub);
+					
+				}
+				
+			}
+		}
+		
+		//Se comprueba que no haya nombres repetidos en la base de datos
 		while(resultado.next()) {
 			
 			if(resultado.getString("nombres").equals(nuevoUsuario.getNombreC())) {
@@ -186,9 +239,10 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			contador ++;
 		}
 		
+		//Si el usuario no es repetido  se crea la query 
 		if(!usuarioRepetido) {
 			
-			String sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, idClub) VALUES (?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, \"idClub\") VALUES (?, ?, ?, ?, ?, ?)";
 			
 			 try (PreparedStatement preparedStatement = inicio.conexion.prepareStatement(sql)) {
 				 
@@ -198,7 +252,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			        preparedStatement.setString(3, nuevoUsuario.getApellidoC());
 			        preparedStatement.setInt(4, nuevoUsuario.getTelefono());
 			        preparedStatement.setString(5, nuevoUsuario.getCorreo()); 
-			        preparedStatement.setLong(6, nuevoUsuario.getIdClubCF()); 
+			        preparedStatement.setLong(6, contadorClub); 
 			        
 			        // Ejecutamos el INSERT
 			        int filasInsertadas = preparedStatement.executeUpdate();
@@ -217,6 +271,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			System.out.println("AVISO[] YA EXISTE UN USUARIO CON ESE NOMBRE");
 		}
 	}
+	
 	
 	
 	public void modificarUsuarioBD() throws SQLException{
