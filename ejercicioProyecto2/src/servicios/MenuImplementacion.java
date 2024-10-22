@@ -84,7 +84,7 @@ public class MenuImplementacion implements MenuInterfaz{
 					cerrarMenu = true;
 					break;
 				case 3:
-					consulta.modificarClubBD();
+					consulta.modificarUsuarioBD();
 					cerrarMenu = true;
 					break;
 				}
