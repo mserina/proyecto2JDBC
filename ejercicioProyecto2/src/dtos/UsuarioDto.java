@@ -8,6 +8,7 @@ public class UsuarioDto {
 	int telefonoC = 0;
 	String correoC = "aaa";
 	long idClubCF = 9999;
+	String contrasena = "aaaa";
 	
 	public long getIdClubCF() {
 		return idClubCF;
@@ -45,13 +46,20 @@ public class UsuarioDto {
 	public void setCorreo(String correo) {
 		this.correoC = correo;
 	}
+	public String getContrasena() {
+		return contrasena;
+	}
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
 	
-	public UsuarioDto(long idUsuario, String nombreC, String apellidoC, int telefono, String correo) {
+	public UsuarioDto(long idUsuario, String nombreC, String apellidoC, int telefono, String correo, String contrasena) {
 		this.idUsuario = idUsuario;
 		this.nombreC = nombreC;
 		this.apellidoC = apellidoC;
 		this.telefonoC = telefono;
 		this.correoC = correo;
+		this.contrasena = contrasena;
 	}
 	
 	public UsuarioDto() {

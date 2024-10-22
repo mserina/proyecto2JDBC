@@ -51,18 +51,30 @@ public class ConexionPostgreSQLImplementacion implements ConexionPostgreSQLInter
 	
 	private String[] configuracionConexion() {
 		
+		//Creamos la variables que contendra los parametros necesarios para establecer la conexion con nuestra base de datos (usuario, puerto, host, nombre de la base dato, url de la base dato)
 		String user="", pass="", port="", host="", db="", url="";
+		
+		//Creamos un array que contenga los valores de las variables una vez se les asigne sus respectivos valores
 		String[] stringConfiguracion = {"","",""};
 		
+		//Properties, que se utiliza para almacenar pares clave-valor en formato de texto
 		Properties propiedadesConexion = new Properties();
 		try {
-			propiedadesConexion.load(new FileInputStream(new File("C:\\Users\\Alumno\\Desktop\\proyectosJava\\proyecto2JDBC\\ejercicioProyecto2\\src\\parametros.txt")));
+			
+			//Aqui cargamos los datos del fichero parametros, que contendra la clave (p ej: usuario) y el valor (p ej: Pedro)
+			propiedadesConexion.load(new FileInputStream(new File("C:\\Users\\Alumno\\Desktop\\proyecto2JDBC\\ejercicioProyecto2\\src\\parametros.txt")));
+			
+			//Y se los vamos pasando a las variables 
 			user = propiedadesConexion.getProperty("user");
 			pass = propiedadesConexion.getProperty("pass");
 			port = propiedadesConexion.getProperty("port");
 			host = propiedadesConexion.getProperty("host");
 			db = propiedadesConexion.getProperty("db");
+			
+			//Con los datos construimos la url
 			url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
+			
+			//Y vamos metiendo en el array el valor que le corresponda
 			stringConfiguracion[0] = url;
 			stringConfiguracion[1] = user;
 			stringConfiguracion[2] = pass;
@@ -78,6 +90,7 @@ public class ConexionPostgreSQLImplementacion implements ConexionPostgreSQLInter
 			stringConfiguracion[2] = "";
 		}
 
+		//Y aqui se devuelve el array con los parametros para esatblecer la configuracion
 		return stringConfiguracion;
 	}
 

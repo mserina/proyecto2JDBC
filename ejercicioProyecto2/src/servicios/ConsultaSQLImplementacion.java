@@ -84,10 +84,17 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 	
 	
 	public ResultSet listaBaseDatoClubs() throws SQLException {
+		
+		//Creamos una consulta createStatement
 		Statement consulta = inicio.conexion.createStatement();
+		
+		//Creamos la sintaxis de la query
 		String query = "SELECT * FROM esquemaclub.\"club\"";
+		
+		//Le pasamos la sintaxis al createStatement y guardamos en un resultSet el resultado de la query
 		ResultSet resultadoQuery = consulta.executeQuery(query);
 		
+		//Y la devolvemos
 		return resultadoQuery;
 	}
 	
@@ -198,6 +205,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		boolean usuarioRepetido = false;
 		int contador = 0;
 		int contadorClub = 0;
+		String sql;
 		
 		//Se piden los datos del usuario nuevo
 		System.out.println("Inserte Nombre");
@@ -210,6 +218,8 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		nuevoUsuario.setCorreo(inicio.sc.next());
 		System.out.println("¿Estas en un club? s/n");
 		String respuesta = inicio.sc.next();
+		System.out.println("Inserta contraseña");
+		nuevoUsuario.setContrasena(inicio.sc.next());
 		
 		//Se pide el nombre del club al que pertenece y de ahi se saca el id del club
 		if(respuesta.equals("s")) {
@@ -242,9 +252,11 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		
 		//Si el usuario no es repetido  se crea la query 
 		if(!usuarioRepetido) {
+						
+			//Creamos la sintaxis de la query
+			sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, \"idClub\", contraseña) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			
-			String sql = "INSERT INTO \"esquemaclub\".\"usuario\" (idusuario, nombres, apellidos, telefono, correo, \"idClub\") VALUES (?, ?, ?, ?, ?, ?)";
-			
+			//Creamos un preparedStatement con la sintaxis sql que hicimos anteriormente
 			 try (PreparedStatement preparedStatement = inicio.conexion.prepareStatement(sql)) {
 				 
 			        // Asignamos los valores del DTO a los parámetros de la consulta SQL
@@ -252,8 +264,9 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			        preparedStatement.setString(2, nuevoUsuario.getNombreC()); 
 			        preparedStatement.setString(3, nuevoUsuario.getApellidoC());
 			        preparedStatement.setInt(4, nuevoUsuario.getTelefono());
-			        preparedStatement.setString(5, nuevoUsuario.getCorreo()); 
-			        preparedStatement.setLong(6, nuevoUsuario.getIdClubCF()); 
+			        preparedStatement.setString(5, nuevoUsuario.getCorreo());
+			        preparedStatement.setLong(6, nuevoUsuario.getIdClubCF());
+			        preparedStatement.setString(7, nuevoUsuario.getContrasena());
 			        
 			        // Ejecutamos el INSERT
 			        int filasInsertadas = preparedStatement.executeUpdate();
@@ -284,10 +297,12 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		PreparedStatement sentencia = null;
 		int filasModificadas;
 		
+		//Nombre del usuario a modificar
 		System.out.println("Inserte nombre del usuario a modificar");
 		nombreInsertado = inicio.sc.next();
 		
-		System.out.println("¿Que campo quiere cambiar? nombres/apellidos/telefono/correo/nombreClub");
+		//Campo a modificar
+		System.out.println("¿Que campo quiere cambiar? nombres/apellidos/telefono/correo/nombreClub/contraseña");
 		opcion = inicio.sc.next();
 				
 		switch(opcion) {
@@ -308,7 +323,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			break;
 			
 		case "apellidos":
-			sql = "UPDATE esquemaclub.\"club\" SET apellidos = ? WHERE nombres = ?"; 
+			sql = "UPDATE esquemaclub.\"usuario\" SET apellidos = ? WHERE nombres = ?"; 
 			sentencia = conexion.prepareStatement(sql);
 			System.out.println("Inserte el nuevo apellido del usuario");
 			sentencia.setString(1, inicio.sc.next());
@@ -316,14 +331,14 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			break;
 			
 		case "telefono":
-			sql = "UPDATE esquemaclub.\"club\" SET telefono = ? WHERE nombres = ?"; 
+			sql = "UPDATE esquemaclub.\"usuario\" SET telefono = ? WHERE nombres = ?"; 
 			sentencia = conexion.prepareStatement(sql);
 			System.out.println("Inserte la telefono del usuario");
-			sentencia.setDate(1, Date.valueOf(inicio.sc.next()));
+			sentencia.setInt(1, inicio.sc.nextInt());
 			sentencia.setString(2, nombreInsertado);
 			break;
 		case "correo":
-			sql = "UPDATE esquemaclub.\"club\" SET correo = ? WHERE nombres = ?"; 
+			sql = "UPDATE esquemaclub.\"usuario\" SET correo = ? WHERE nombres = ?"; 
 			sentencia = conexion.prepareStatement(sql);
 			System.out.println("Inserte la correo del usuario");
 			sentencia.setDate(1, Date.valueOf(inicio.sc.next()));
@@ -331,29 +346,46 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			break;
 			
 		case "nombreClub":
-			// Primero, obtener el idClub basado en el nombre del club
-            sql = "SELECT idClub FROM esquemaclub.\"club\" WHERE nombres = ?";
+			
+			// Se creamos una sintaxis para una query al campo id de los clubs
+            sql = "SELECT idClub FROM esquemaclub.\"club\" WHERE nombreclub = ?";
+            
+            //Creamos un preparedStatement con la sintaxis anteriormente creado
             sentencia = conexion.prepareStatement(sql);
-            System.out.println("Inserte el nombre del club al que pertenece el usuario");
+            
+            //Pedimos el nombre del club 
+            System.out.println("Inserte el nombre del club al que quiere pertenecer el usuario");
             String nombreClub = inicio.sc.next();
+            
+            //Se la asignamos al valor 1 (el del nombre del club) de la query para clubs
             sentencia.setString(1, nombreClub);
 
-            // Ejecutar la consulta para obtener el idClub
+            // Ejecutar la consulta para obtener el idClub y lo guardamos en un ResultSet
             ResultSet resultadoId = sentencia.executeQuery();
             if (resultadoId.next()) {
+            	
+            	//Guardamos el id del club
                 int idClub = resultadoId.getInt("idClub");
 
                 // Luego, actualizar el idClub en la tabla usuario
-                sql = "UPDATE esquemaclub.\"usuario\" SET idClub = ? WHERE nombres = ?";
+                sql = "UPDATE esquemaclub.\"usuario\" SET \"idClub\" = ? WHERE nombres = ?";
                 sentencia = conexion.prepareStatement(sql);
                 sentencia.setInt(1, idClub);
                 sentencia.setString(2, nombreInsertado);
+                
             } else {
                 System.out.println("No se encontró ningún club con ese nombre.");
                 return;
             }
             break;
-			
+          
+		case "contraseña":
+			sql = "UPDATE esquemaclub.\"usuario\" SET contraseña = ? WHERE nombres = ?"; 
+			sentencia = conexion.prepareStatement(sql);
+			System.out.println("Inserte el nueva contraseña del usuario");
+			sentencia.setString(1, inicio.sc.next());
+			sentencia.setString(2, nombreInsertado);
+			break;
 		}	
 		
 		//Aqui es donde se coge el Prepared Statement que estuvimos usando para modificar datos y ejecutamos la query, lo que nos da un numero de filas como resultado
@@ -373,6 +405,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		PreparedStatement sentencia = null;
 		int filasBorradas;
 		
+		
 		System.out.println("Inserte nombre del club que quiera dar de baja");
 		
 		nombreInsertado = inicio.sc.next();
@@ -384,49 +417,6 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 		filasBorradas = sentencia.executeUpdate();
         System.out.println("Filas afectadas: " + filasBorradas);
 		
-	}
-	
-	
-	/**
-	 * 
-	 * public void cargaInicalC() throws SQLException{
-		Statement consulta = inicio.conexion.createStatement();
-		String query = "SELECT * FROM esquemaclub.\"club\"";
-		ResultSet resultadoQuery = consulta.executeQuery(query);
-		
-		inicio.listaClub.clear();
-		while (resultadoQuery.next()) {
-			long idClubC = resultadoQuery.getInt("idClub");
-			String nombreClubC = resultadoQuery.getString("nombreclub");
-			String sedePrincipalC = resultadoQuery.getString("sedeprincipal");
-			LocalDate fechaCreacionC = resultadoQuery.getDate("fechacreacion").toLocalDate();
-            boolean entradaPublicaC = resultadoQuery.getBoolean("entradapublica");
-            String codigoPrivado = resultadoQuery.getString("codigoprivado");
-			
-            ClubDto nuevoClub = new ClubDto(idClubC, nombreClubC, sedePrincipalC, entradaPublicaC, codigoPrivado, fechaCreacionC);
-            inicio.listaClub.add(nuevoClub);
-		}
-	}
-	
-	public void cargaInicalU() throws SQLException{
-		Statement consulta = inicio.conexion.createStatement();
-		String query = "SELECT * FROM esquemaclub.\"usuario\"";
-		ResultSet resultadoQuery = consulta.executeQuery(query);
-		
-		inicio.listaClub.clear();
-		while (resultadoQuery.next()) {
-			long idUsuario = resultadoQuery.getInt("idClub");
-			String nombreC = resultadoQuery.getString("nombres");
-			String apellidoC = resultadoQuery.getString("apellidos");
-			int telefonoC = resultadoQuery.getInt("telefono");
-            String correoC = resultadoQuery.getString("correo");
-            long idClubCF = resultadoQuery.getLong("idClub");
-			
-            UsuarioDto nuevoUsuario = new UsuarioDto(idUsuario, nombreC, apellidoC, telefonoC, correoC, idClubCF);
-            inicio.listaUsuario.add(nuevoUsuario);
-		}
-	}
-	 */
-	
+	}	
 	
 }
