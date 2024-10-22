@@ -2,4 +2,4 @@ user=postgres
 pass=123
 port=5432
 host=localhost
-db=postgres
+db=clubMotos

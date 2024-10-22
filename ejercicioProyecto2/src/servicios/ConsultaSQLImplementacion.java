@@ -218,10 +218,11 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			
 			while(resultadoClub.next()) {
 				
-				contadorClub ++;
 				if(resultadoClub.getString("nombreclub").equals(nombreClub)) {
 					
-					nuevoUsuario.setIdClubCF(contadorClub);
+					//Una vez encontrado el club con el nombre que insertamos, se buscara sobre 
+					nuevoUsuario.setIdClubCF(resultadoClub.getInt("idclub"));
+					break;
 					
 				}
 				
@@ -252,7 +253,7 @@ public class ConsultaSQLImplementacion implements ConsultaSQLInterfaz {
 			        preparedStatement.setString(3, nuevoUsuario.getApellidoC());
 			        preparedStatement.setInt(4, nuevoUsuario.getTelefono());
 			        preparedStatement.setString(5, nuevoUsuario.getCorreo()); 
-			        preparedStatement.setLong(6, contadorClub); 
+			        preparedStatement.setLong(6, nuevoUsuario.getIdClubCF()); 
 			        
 			        // Ejecutamos el INSERT
 			        int filasInsertadas = preparedStatement.executeUpdate();
